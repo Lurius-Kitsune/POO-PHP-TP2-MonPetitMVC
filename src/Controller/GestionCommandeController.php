@@ -27,4 +27,17 @@ class GestionCommandeController
             throw new AppException("Client " . $id . " inconnu");
         }
     }
+
+    public function chercheToutes()
+    {
+        // appel de la methode findAll() de la classe Model adequate
+        $modele = new GestionCommandeModel();
+        $commandes = $modele->findAll();
+        if ($commandes) {
+            $r = new ReflectionClass($this);
+            include_once PATH_VIEW . str_replace('Controller', 'View', $r->getshortName()) . "/plusieursCommande.php";
+        } else {
+            throw new AppException("Aucun client a afficher");
+        }
+    }
 }

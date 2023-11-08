@@ -33,7 +33,7 @@ class GestionCommandeModel
     public function findAll(): array
     {
         $unObjetPdo = Connexion::getConnexion();
-        $sql = "select * from CLIENT";
+        $sql = "select * from COMMANDE";
         $lignes = $unObjetPdo->query($sql);
         return $lignes->fetchAll(PDO::FETCH_CLASS, Commande::class);
     }
