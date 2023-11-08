@@ -7,7 +7,9 @@
             "email": "your@email.here"
         }
     ],
-    "require": {},
+    "require": {
+        "twig/twig": "* v3.4.3"
+    },
     "autoload": {
         "psr-4": {
             "App\\": "src",

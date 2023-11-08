@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Model\GestionClientModel;
 use ReflectionClass;
 use App\Exceptions\AppException;
+use Tools\MyTwig;
 
 /**
  * Description of GestionClientController
@@ -22,7 +23,8 @@ class GestionClientController
         $unClient = $modele->find($id);
         if ($unClient) {
             $r = new ReflectionClass($this);
-            include_once PATH_VIEW . str_replace('Controller', 'View', $r->getShortName()) . "/unClient.php";
+            $vue = str_replace('Controller', 'View', $r->getShortName()) . "/unClient.html.twig";
+            MyTwig::afficheVue($vue, array('unClient' => $unClient));
         } else {
             throw new AppException("Client " . $id . " inconnu");
         }
