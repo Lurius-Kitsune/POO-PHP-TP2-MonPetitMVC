@@ -34,10 +34,11 @@ class GestionClientController
     {
         // appel de la methode findAll() de la classe Model adequate
         $modele = new GestionClientModel();
-        $clients = $modele->findAll();
-        if ($clients) {
+        $Clients = $modele->findAll();
+        if ($Clients) {
             $r = new ReflectionClass($this);
-            include_once PATH_VIEW . str_replace('Controller', 'View', $r->getshortName()) . "/plusieursclients.php";
+            $vue = str_replace('Controller', 'View', $r->getshortName()) . "/plusieursClients.html.twig";
+            MyTwig::afficheVue($vue, array('Clients' => $Clients));
         } else {
             throw new AppException("Aucun client a afficher");
         }

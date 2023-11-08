@@ -1,0 +1,35 @@
+{% extends "layout.html.twig" %}
+{% block contenu %}
+    <h2>Liste des clients </h2>
+    <table>
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>Titre</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Adresse</th>
+                <th>Complement</th>
+                <th>Cp</th>
+                <th>Ville</th>
+                <th>Tel</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for Client in Clients %}
+                <tr>
+                    <td>{{ Client.GetId() }}</td>
+                    <td>{{ Client.GetTitreCli() }}</td>
+                    <td>{{ Client.GetNomCli() }}</td>
+                    <td>{{ Client.GetPrenomCli() }}</td>
+                    <td>{{ Client.getAdresseRue1Cli() }}</td>
+                    <td>{{ Client.GetAdresseRue2Cli() }}</td>
+                    <td>{{ Client.GetCpCli() }}</td>
+                    <td>{{ Client.GetVilleCli() }}</td>
+                    <td>{{ Client.GetTelCli() }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p> Nombre de clients trouvés : {{ Clients|length }} </p>
+{% endblock %}
