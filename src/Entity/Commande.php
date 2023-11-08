@@ -12,51 +12,55 @@ namespace App\Entity;
  *
  * @author Benoît
  */
-class Commande {
-
+class Commande
+{
     private int $id;
-    private  $dateCde;
+    private $dateCde;
     private ?int $noFacture;
     private int $idClient;
 
-    public function __construct($params = null) {
+    public function __construct($params = null)
+    {
         if (!is_null($params)) {
             foreach ($params as $cle => $valeur) {
                 if (strlen($valeur) > 0) {
-                        $this->$cle = $valeur;                    
+                    $this->$cle = $valeur;
                 } else {
                     $this->$cle = null;
                 }
             }
         }
     }
-    
-//    public function __set($attribute, $value):void{
-//        if($attribute=="dateCde"){
-//            $this->dateCommande= new DateTime($value);
-//        }
-//    }
 
-    public function getId():int {
+    //    public function __set($attribute, $value):void{
+    //        if($attribute=="dateCde"){
+    //            $this->dateCommande= new DateTime($value);
+    //        }
+    //    }
+
+    public function getId(): int
+    {
         return $this->id;
     }
 
-    function getDateCde() {
+    public function getDateCde()
+    {
         //return new DateTime($this->dateCde);
         return $this->dateCde;
     }
 
-    function getNoFacture() :?int {
+    public function getNoFacture(): ?int
+    {
         return $this->noFacture;
     }
 
-    function getIdClient() :int {
-        return $this->idClient;    }
-        
-    public function setNoFacture(?int $noFacture): void {
-        $this->noFacture = $noFacture;
+    public function getIdClient(): int
+    {
+        return $this->idClient;
     }
 
-
-
+    public function setNoFacture(?int $noFacture): void
+    {
+        $this->noFacture = $noFacture;
+    }
 }
