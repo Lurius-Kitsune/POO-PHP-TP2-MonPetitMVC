@@ -27,4 +27,17 @@ class GestionClientController
             throw new AppException("Client " . $id . " inconnu");
         }
     }
+
+    public function chercheTous()
+    {
+        // appel de la methode findAll() de la classe Model adequate
+        $modele = new GestionClientModel();
+        $clients = $modele->findAll();
+        if ($clients) {
+            $r = new ReflectionClass($this);
+            include_once PATH_VIEW . str_replace('Controller', 'View', $r->getshortName()) . "/plusieursclients.php";
+        } else {
+            throw new AppException("Aucun client a afficher");
+        }
+    }
 }
