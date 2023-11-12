@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Client;
 use App\Model\GestionClientModel;
 use ReflectionClass;
+use Exception;
 use App\Exceptions\AppException;
 use Tools\MyTwig;
 
@@ -41,6 +43,23 @@ class GestionClientController
             MyTwig::afficheVue($vue, array('Clients' => $Clients));
         } else {
             throw new AppException("Aucun client a afficher");
+        }
+    }
+
+    public function creerClient(array $params)
+    {
+        $vue = "GestionClientView\\creerClient.html.twig";
+        MyTwig::afficheVue($vue, array());
+    }
+
+    public function enregistreClient(array $params)
+    {
+        try {
+            $client = new Client($params);
+            $modele = new GestionClientModel();
+            $modele->enregistreClient($client);
+        } catch (Exception $e) {
+            throw new AppException("Erreyr à l'enregistrement d'un nouveau client");
         }
     }
 }

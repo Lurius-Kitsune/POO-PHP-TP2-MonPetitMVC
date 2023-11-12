@@ -1,0 +1,35 @@
+{% extends "layout.html.twig" %}
+{% block contenu %}
+	<div class="container">
+		<h2>Nouveau client</h2>
+		<form action="index.php?c=GestionClient&a=enregistreClient" method="post">
+			<div class="form-group">
+				<label for="titre">Titre</label>
+				<select class="form-control" id="titre" name="titreCli" required>
+					<option>Choisir ...</option>
+					<option>Monsieur</option>
+					<option>Madame</option>
+					<option>Mademoiselle</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="nom">Nom:</label>
+				<input type="text" class="form-control" id="nom" name="nomCli" required>
+				<label for="prenom">Prenom:</label>
+				<input type="text" class="form-control" id="prenom" name="prenomCli" required>
+				<label for="adresse1">Adresse:</label>
+				<input type="text" class="form-control" id="adresse1" name="adresse1Cli" required>
+				<label for="adresse2">Complément d'adresse:</label>
+				<input type="text" class="form-control" id="adresse2" name="adresse2Cli">
+				<label for"cp">Code postal:</label>
+				<input type="text" class="form-control" id="CP" name="CP" required>
+				<label for="ville">Ville :</label>
+				<input type="text" class="form-control" id="ville" name="villeCli" required>
+			</div>
+			<button type="submit" class="btn btn-default">Créer</button>
+		</form>
+	</div>
+{% endblock %}
+{% block footer %}
+    {{ parent() }}
+{% endblock %}
