@@ -1,0 +1,10 @@
+{% block contenu %}
+    <center>
+        <h1>Oups...</h1>
+        <h4>Cette page n'existe pas</h4>
+        {% if DEV_MODE %}
+            {{ ex }}
+            BOB
+        {% endif %}
+    </center>
+{% endblock %}
