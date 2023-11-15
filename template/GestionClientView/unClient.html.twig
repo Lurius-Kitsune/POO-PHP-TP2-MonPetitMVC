@@ -9,11 +9,11 @@
     {% if unClient %}
         <h2>Informations du client numéro {{ idClient }}</h2>
         <p>{{ unClient.getPrenomCli() }} {{ unClient.getNomCli() }}</p>
-        <p> {{ unClient . getAdresseRuelcli() }}</p>
+        <p> {{ unClient.getAdresseRuelcli() }}</p>
         {% if unClient.getAdresseRue2Cli() %}
-            <p> {{ unClient. getAdresseRue2Cli() }}</p>
+            <p> {{ unClient.getAdresseRue2Cli() }}</p>
         {% endif %}
-        <p>{{ unClient. getCpCli() }} {{ unClient.getVillecli() }}</p>
+        <p>{{ unClient.getCpCli() }} {{ unClient.getVillecli() }}</p>
         <p>{{ unClient.getTelCli() }}</p>
     {% else %}
     {% endif %}

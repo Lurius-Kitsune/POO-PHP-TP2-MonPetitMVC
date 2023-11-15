@@ -7,34 +7,35 @@ namespace App\Controller;
 use App\Entity\Client;
 use App\Model\GestionClientModel;
 use App\Repository\ClientRepository;
-use ReflectionClass;
-use Exception;
 use App\Exceptions\AppException;
 use Tools\MyTwig;
 use Tools\Repository;
+use ReflectionClass;
+use Exception;
+
 
 /**
  * Description of GestionClientController
  * @author benoit ROCHE
  */
 class GestionClientController {
-    
+
     private ClientRepository $repository;
-    
+
     public function __construct() {
-        $this->repository = Repository::getRepository("App\Entity\Client"); 
+        $this->repository = Repository::getRepository("App\Entity\Client");
     }
-    
+
     public function chercheUn(array $params) {
-        $modele = new GestionClientModel();
         // on recupere tous les id des clients
-        $ids = $modele->findIds();
+        $ids = $this->repository->findIds();
         // on place les ids trouves dans le tableal de parametres a envoyer a la vue
         $params ['lesId'] = $ids;
+        $params ['ac'] = 'Commande';
         // on teste si l'l'id du client a chercher a ete passe dans l'URL
         if (array_key_exists('id', $params)) {
             $id = filter_var(intval($params ["id"]), FILTER_VALIDATE_INT);
-            $unClient = $modele->find($id);
+            $unClient = $this->repository->find($id);
             if ($unClient) {
                 // le client a ete trouvé
                 $params ['unClient'] = $unClient;

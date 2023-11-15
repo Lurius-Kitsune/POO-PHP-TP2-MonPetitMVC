@@ -1,0 +1,18 @@
+<h3>recherche</h3>
+<div class="container">
+    <form action="?c=GestionCommande&a=chercheUne" method="post">
+        <div class="form-group">
+            <label for="Numero du client">Id du commande</label>
+            <select class="form-control" id="titre" name="id">
+                {% for id in lesId %}
+                    {% if idCommande and idCommande == id['id'] %}
+                        <option selected>{{ id ['id'] }}</option>
+                    {% else %}
+                        <option >{{ id ['id'] }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+        <input type="submit" value="Voir" class="btn btn-default"/>
+    </form>
+</div>
