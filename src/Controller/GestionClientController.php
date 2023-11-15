@@ -6,17 +6,25 @@ namespace App\Controller;
 
 use App\Entity\Client;
 use App\Model\GestionClientModel;
+use App\Repository\ClientRepository;
 use ReflectionClass;
 use Exception;
 use App\Exceptions\AppException;
 use Tools\MyTwig;
+use Tools\Repository;
 
 /**
  * Description of GestionClientController
  * @author benoit ROCHE
  */
 class GestionClientController {
-
+    
+    private ClientRepository $repository;
+    
+    public function __construct() {
+        $this->repository = Repository::getRepository("App\Entity\Client"); 
+    }
+    
     public function chercheUn(array $params) {
         $modele = new GestionClientModel();
         // on recupere tous les id des clients
@@ -42,8 +50,7 @@ class GestionClientController {
 
     public function chercheTous() {
         // appel de la methode findAll() de la classe Model adequate
-        $modele = new GestionClientModel();
-        $Clients = $modele->findAll();
+        $Clients = $this->repository->findAll();
         if ($Clients) {
             $r = new ReflectionClass($this);
             $vue = str_replace('Controller', 'View', $r->getshortName()) . "/plusieursClients.html.twig";
