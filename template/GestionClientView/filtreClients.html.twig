@@ -1,0 +1,19 @@
+{% extends "layout.html.twig" %}
+{% import '/imports/elements.html.twig' as elements %}
+{% block contenu %}
+    <div class="container">
+        <h2>Recherche selon critères</h2>
+        <form action="index.php?c=GestionClient&a=rechercheClients" method="post">
+            <div class="form-group">
+                {{ elements. list ("titrecli", titres, "titre", "titres") }}
+                {{ elements. list ("villeCli", villes, "ville", "villes") }}
+                {{ elements. list ("cpCli", cps, "cp", "cps") }}
+            </div>
+            <button type="submit" class="btn btn-default">Voir</button>
+        </form>
+    </div>
+{% endblock %}
+{% block footer %}
+    {{ parent () }}
+    <script type="text/javascript" src="assets/js/functions.js"></script>
+{% endblock %}

@@ -99,13 +99,13 @@ class GestionClientController {
         $params["telCli"] = filter_var($params["telCli"], FILTER_SANITIZE_NUMBER_INT);
         return $params;
     }
-    
+
     public function nbClients(): void {
         $nbClients = $this->repository->countRows();
         echo "Nombre de client : " . $nbClients;
     }
-    
-     private function trieTTStr(array $tableau, string $sousTableau): array {
+
+    private function trieTTStr(array $tableau, string $sousTableau): array {
         usort($tableau, function ($a, $b) use ($sousTableau) {
             return strcmp($a[$sousTableau], $b[$sousTableau]);
         });
@@ -142,12 +142,66 @@ class GestionClientController {
             throw new AppException("Aucun clients");
         }
     }
-    
+
     public function testFindBy(): void {
         $parametres = array('titreCli' => 'Madame', 'cpCli' => '14000');
         $clients = $this->repository->findBytitreCli_and_cpCli($parametres);
         $r = new ReflectionClass($this);
         $vue = str_replace('Controller', 'View', $r->getShortName()) . "/plusieursClients.html.twig";
         MyTwig::afficheVue($vue, array('clients' => $clients));
+    }
+
+    public function rechercheClients(array $params): void {
+        $titres = $this->repository->findColumnDistinctValues('titreCli');
+        $cps = $this->repository->findColumnDistinctValues('cpCli');
+        $villes = $this->repository->findColumnDistinctValues('villeCli');
+        $paramsVue['titres'] = $titres;
+        $paramsVue['cps'] = $cps;
+        $paramsVue['villes'] = $villes;
+        // Gestion du retour du formulaire
+        // On va d'abord filtrer et préparer le retour du formulaire avec la fonction verifieEtPrepareCriteres
+        $criteresPrepares = $params;
+        $criteresPrepares = $this->verifieEtPrepareCriteres($params);
+        if (count($criteresPrepares) > 0) {
+            $clients = $this->repository->findBy($params);
+            $paramsVue['clients'] = $clients;
+            $criteres = [];
+            foreach ($criteresPrepares as $valeur) {
+                if ($valeur != "Choisir...") {
+                    $criteres[] = $valeur;
+                }
+            }
+            $paramsVue['criteres'] = $criteres;
+            $vue = "GestionClientView\\plusieursClients.html.twig";
+            MyTwig::afficheVue($vue, $paramsVue);
+        } else {
+            $vue = "GestionClientView\\filtreClients.html.twig";
+            MyTwig::afficheVue($vue, $paramsVue);
+        }
+    }
+
+    private function verifieEtPrepareCriteres(array $params): array {
+        $args = array(
+            'titreCli' => array(
+                'filter' => FILTER_VALIDATE_REGEXP | FILTER_SANITIZE_SPECIAL_CHARS,
+                'flags' => FILTER_NULL_ON_FAILURE,
+                'options' => array('regexp' => '/^(Monsieur|Madame|Mademoiselle)$/'
+                )),
+            'cpCli' => array(
+                'filter' => FILTER_VALIDATE_REGEXP | FILTER_SANITIZE_SPECIAL_CHARS,
+                'flags' => FILTER_NULL_ON_FAILURE,
+                'options' => array('regexp' => "/[0-9]{5}/"
+                )),
+            'villeCli' => FILTER_SANITIZE_SPECIAL_CHARS
+        );
+        $retour = filter_var_array($params, $args, false);
+        if (isset($retour['titreCli']) || isset($retour['cpCli']) || isset($retour['villeCli'])) {
+            // c'est le retour du formulaire de choix de filtre
+            $element = "Choisir ... ";
+            while (in_array($element, $retour)) {
+                unset($retour[array_search($element, $retour)]);
+            }
+        }
+        return $retour;
     }
 }
