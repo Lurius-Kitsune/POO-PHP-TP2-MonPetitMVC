@@ -16,17 +16,17 @@
             </tr>
         </thead>
         <tbody>
-            {% for Client in Clients %}
+            {% for client in clients %}
                 <tr>
-                    <td>{{ Client.GetId() }}</td>
-                    <td>{{ Client.GetTitreCli() }}</td>
-                    <td>{{ Client.GetNomCli() }}</td>
-                    <td>{{ Client.GetPrenomCli() }}</td>
-                    <td>{{ Client.getAdresseRue1Cli() }}</td>
-                    <td>{{ Client.GetAdresseRue2Cli() }}</td>
-                    <td>{{ Client.GetCpCli() }}</td>
-                    <td>{{ Client.GetVilleCli() }}</td>
-                    <td>{{ Client.GetTelCli() }}</td>
+                    <td>{{ client.GetId() }}</td>
+                    <td>{{ client.GetTitreCli() }}</td>
+                    <td>{{ client.GetNomCli() }}</td>
+                    <td>{{ client.GetPrenomCli() }}</td>
+                    <td>{{ client.getAdresseRue1Cli() }}</td>
+                    <td>{{ client.GetAdresseRue2Cli() }}</td>
+                    <td>{{ client.GetCpCli() }}</td>
+                    <td>{{ client.GetVilleCli() }}</td>
+                    <td>{{ client.GetTelCli() }}</td>
                 </tr>
             {% endfor %}
         </tbody>

@@ -50,11 +50,11 @@ class GestionClientController {
 
     public function chercheTous() {
         // appel de la methode findAll() de la classe Model adequate
-        $Clients = $this->repository->findAll();
-        if ($Clients) {
+        $clients = $this->repository->findAll();
+        if ($clients) {
             $r = new ReflectionClass($this);
             $vue = str_replace('Controller', 'View', $r->getshortName()) . "/plusieursClients.html.twig";
-            MyTwig::afficheVue($vue, array('Clients' => $Clients));
+            MyTwig::afficheVue($vue, array('clients' => $clients));
         } else {
             throw new AppException("Aucun client a afficher");
         }
@@ -98,5 +98,56 @@ class GestionClientController {
         $params["villeCli"] = htmlspecialchars($params["villeCli"]);
         $params["telCli"] = filter_var($params["telCli"], FILTER_SANITIZE_NUMBER_INT);
         return $params;
+    }
+    
+    public function nbClients(): void {
+        $nbClients = $this->repository->countRows();
+        echo "Nombre de client : " . $nbClients;
+    }
+    
+     private function trieTTStr(array $tableau, string $sousTableau): array {
+        usort($tableau, function ($a, $b) use ($sousTableau) {
+            return strcmp($a[$sousTableau], $b[$sousTableau]);
+        });
+        return $tableau;
+    }
+
+    private function trieTTIntDesc(array $tableau, string $sousTableau): array {
+        usort($tableau, function ($a, $b) use ($sousTableau) {
+            return $b[$sousTableau] - $a[$sousTableau];
+        });
+        return $tableau;
+    }
+
+    public function statsClients() {
+        // récupération d'un objet ClientRepository
+        $clients = $this->repository->statistiquesTousClients();
+        $repositoryCommande = Repository::getRepository("App\Entity\Commande");
+        $commandes = $repositoryCommande->findAll();
+        for ($i = 0; $i < count($clients); $i++) {
+            $nbCommande = 0;
+            foreach ($commandes as $commande) {
+                if ($commande->getIdClient() == $clients[$i]["id"]) {
+                    $nbCommande += 1;
+                }
+            }
+            $clients[$i]['nbCommandes'] = $nbCommande;
+        }
+        $clientsTrie = $this->trieTTIntDesc($this->trieTTStr($clients, "nomCli"), "nbCommandes");
+        if ($clientsTrie) {
+            $r = new ReflectionClass($this);
+            $vue = str_replace('Controller', 'View', $r->getShortName()) . "\statsClient.html.twig";
+            MyTwig::afficheVue($vue, array('clients' => $clientsTrie));
+        } else {
+            throw new AppException("Aucun clients");
+        }
+    }
+    
+    public function testFindBy(): void {
+        $parametres = array('titreCli' => 'Madame', 'cpCli' => '14000');
+        $clients = $this->repository->findBytitreCli_and_cpCli($parametres);
+        $r = new ReflectionClass($this);
+        $vue = str_replace('Controller', 'View', $r->getShortName()) . "/plusieursClients.html.twig";
+        MyTwig::afficheVue($vue, array('clients' => $clients));
     }
 }

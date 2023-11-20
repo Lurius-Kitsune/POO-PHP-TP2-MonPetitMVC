@@ -86,9 +86,46 @@ abstract class Repository {
         $req->execute($parametres);
     }
 
+    public function countRows(): int {
+        $sql = "select count(*) from " . $this->table;
+        $nbLignes = $this->connexion->query($sql);
+        return (int) $nbLignes->fetch(PDO::FETCH_NUM)[0];
+    }
+
+    public function executeSQL(string $sql): ?array {
+        $resultat = $this->connexion->query($sql);
+        return $resultat->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public static function getRepository(string $entity): Repository {
         $repositoryName = str_replace('Entity', 'Repository', $entity) . 'Repository';
         $repository = new $repositoryName($entity);
         return $repository;
+    }
+
+    public function __call(string $methode, array $params) {
+        if (preg_match("#^findBy#", $methode)) {
+            return $this->traiteFindBy($methode, array_values($params[0]));
+        }
+    }
+
+    private function traiteFindBy(string $methode, array $params): array {
+        $criteres = str_replace("findBy", "", $methode);
+        $criteres = explode("_and_", $criteres);
+        if (count($criteres) > 0) {
+            $sql = 'select * from ' . $this->table . " where ";
+            $pasPremier = false;
+            foreach ($criteres as $critere) {
+                if ($pasPremier) {
+                    $sql .= " and ";
+                }
+                $sql .= $critere . " = ? ";
+                $pasPremier = true;
+            }
+            $lignes = $this->connexion->prepare($sql);
+            $lignes->execute($params);
+            $lignes->setFetchMode(PDO::FETCH_CLASS, $this->classeNameLong, null);
+            return $lignes->fetchAll();
+        }
     }
 }
