@@ -77,16 +77,6 @@ class GestionClientController {
         }
     }
 
-    public function enregistreClient(array $params) {
-        try {
-            $client = new Client($params);
-            $modele = new GestionClientModel();
-            $modele->enregistreClient($client);
-        } catch (Exception $e) {
-            throw new AppException("Erreyr à l'enregistrement d'un nouveau client");
-        }
-    }
-
     private function verificationSaisieClient(array $params): array {
         $params["nomCli"] = htmlspecialchars($params["nomCli"]);
         $params["prenomCli"] = htmlspecialchars($params["prenomCli"]);
