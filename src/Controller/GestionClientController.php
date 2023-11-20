@@ -13,7 +13,6 @@ use Tools\Repository;
 use ReflectionClass;
 use Exception;
 
-
 /**
  * Description of GestionClientController
  * @author benoit ROCHE
@@ -62,8 +61,20 @@ class GestionClientController {
     }
 
     public function creerClient(array $params) {
-        $vue = "GestionClientView\\creerClient.html.twig";
-        MyTwig::afficheVue($vue, array());
+        if (empty($params)) {
+            $vue = "GestionClientView\\creerClient.html.twig";
+            MyTwig::afficheVue($vue, array());
+        } else {
+            try {
+                $params = $this->verificationSaisieClient($params);
+                //Creation de l'objet client à partir des données du formulaire
+                $client = new Client($params);
+                $this->repository->insert($client);
+                $this->chercheTous();
+            } catch (Exception $ex) {
+                throw new AppException("Erreur à l'enregistrement d'un nouveau client");
+            }
+        }
     }
 
     public function enregistreClient(array $params) {
@@ -74,5 +85,18 @@ class GestionClientController {
         } catch (Exception $e) {
             throw new AppException("Erreyr à l'enregistrement d'un nouveau client");
         }
+    }
+
+    private function verificationSaisieClient(array $params): array {
+        $params["nomCli"] = htmlspecialchars($params["nomCli"]);
+        $params["prenomCli"] = htmlspecialchars($params["prenomCli"]);
+        $params["adresseRue1Cli"] = htmlspecialchars($params["adresseRue1Cli"]);
+        if ($params["adresseRue2Cli"]) {
+            $params["adresseRue2Cli"] = htmlspecialchars($params["adresseRue2Cli"]);
+        }
+        $params["cpCli"] = filter_var($params["cpCli"], FILTER_SANITIZE_NUMBER_INT);
+        $params["villeCli"] = htmlspecialchars($params["villeCli"]);
+        $params["telCli"] = filter_var($params["telCli"], FILTER_SANITIZE_NUMBER_INT);
+        return $params;
     }
 }
