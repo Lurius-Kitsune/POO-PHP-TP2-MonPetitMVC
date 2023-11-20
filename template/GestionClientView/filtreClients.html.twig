@@ -5,12 +5,24 @@
         <h2>Recherche selon critères</h2>
         <form action="index.php?c=GestionClient&a=rechercheClients" method="post">
             <div class="form-group">
-                {{ elements. list ("titrecli", titres, "titre", "titres") }}
+                {{ elements. list ("titreCli", titres, "titre", "titres") }}
                 {{ elements. list ("villeCli", villes, "ville", "villes") }}
                 {{ elements. list ("cpCli", cps, "cp", "cps") }}
             </div>
             <button type="submit" class="btn btn-default">Voir</button>
         </form>
+        {% if criteres %}
+            <h4> Critères :
+                {% for critere in criteres %}
+                    {{ critere }} -
+                {% endfor %}
+            </h4>
+            {% if clients %}
+                {{ include ('/blocks/arrayClients.html.twig') }}
+            {% else %}
+                <h5> Aucun client trouve pour ces criteres</h5>
+            {% endif %}
+        {% endif %}
     </div>
 {% endblock %}
 {% block footer %}

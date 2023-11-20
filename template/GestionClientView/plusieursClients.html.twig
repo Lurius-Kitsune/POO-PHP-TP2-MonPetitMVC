@@ -1,35 +1,6 @@
 {% extends "layout.html.twig" %}
 {% block contenu %}
     <h2>Liste des clients </h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">id</th>
-                <th scope="col">Titre</th>
-                <th scope="col">Nom</th>
-                <th scope="col">Prenom</th>
-                <th scope="col">Adresse</th>
-                <th scope="col">Complement</th>
-                <th scope="col">Cp</th>
-                <th scope="col">Ville</th>
-                <th scope="col">Tel</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for client in clients %}
-                <tr>
-                    <td>{{ client.GetId() }}</td>
-                    <td>{{ client.GetTitreCli() }}</td>
-                    <td>{{ client.GetNomCli() }}</td>
-                    <td>{{ client.GetPrenomCli() }}</td>
-                    <td>{{ client.getAdresseRue1Cli() }}</td>
-                    <td>{{ client.GetAdresseRue2Cli() }}</td>
-                    <td>{{ client.GetCpCli() }}</td>
-                    <td>{{ client.GetVilleCli() }}</td>
-                    <td>{{ client.GetTelCli() }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    {{  include('/blocks/arrayClients.html.twig') }}
     <p> Nombre de clients trouvés : {{ Clients|length }} </p>
 {% endblock %}
