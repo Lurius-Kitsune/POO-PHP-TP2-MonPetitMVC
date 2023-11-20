@@ -1,0 +1,19 @@
+<table class="table">
+        <thead>
+            <tr>
+                <th scope="col">id</th>
+                <th scope="col">date</th>
+                <th scope="col">numéro Facture</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for commande in commandes %}
+            <a href="../../src/Entity/Commande.php"></a>
+                <tr>
+                    <td>{{ commande.getId() }}</td>
+                    <td>{{ commande.getDateCde() }}</td>
+                    <td>{{ commande.getNoFacture() }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>

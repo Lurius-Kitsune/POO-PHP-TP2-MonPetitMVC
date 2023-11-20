@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use ReflectionClass;
+use Error;
 use App\Exceptions\AppException;
 use App\Model\GestionCommandeModel;
 use App\Repository\CommandeRepository;
@@ -55,6 +56,24 @@ class GestionCommandeController {
             include_once PATH_VIEW . str_replace('Controller', 'View', $r->getshortName()) . "/plusieursCommande.php";
         } else {
             throw new AppException("Aucun client a afficher");
+        }
+    }
+
+    public function commandesUnClient(array $args) {
+        try{
+        $clientRepository = Repository::getRepository("App\Entity\Client");
+        //le client existe et param donner ?
+        if (!array_key_exists('clientId', $args)) {
+            throw new AppException('Client non trouver.');
+        } else {
+            $params['unClient'] = $clientRepository->find((int)$args['clientId']);;
+            $params['commandes'] = $this->repository->findBy(array('idClient' => $args['clientId']));
+            $r = new ReflectionClass($this);
+            $vue = str_replace('Controller', 'view', $r->getshortName()) . "/commandesUnClients.html.twig";
+            MyTwig::afficheVue($vue, $params);
+        }
+        } catch(Error $ex){
+            throw new AppException('Client non trouver.');
         }
     }
 }
