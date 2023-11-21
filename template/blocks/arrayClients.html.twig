@@ -1,4 +1,5 @@
-<table class="table">
+{%  if clients %}
+    <table class="table">
         <thead>
             <tr>
                 <th scope="col">id</th>
@@ -29,3 +30,8 @@
             {% endfor %}
         </tbody>
     </table>
+{%  else %}
+    <div class="alert alert-danger">
+        <center>Aucun client trouvé pour ces critères</center>
+    </div>
+{% endif %}

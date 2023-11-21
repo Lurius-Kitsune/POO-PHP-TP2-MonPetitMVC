@@ -26,20 +26,20 @@ class GestionClientController {
     }
 
     public function chercheUn(array $params) {
-        // on recupere tous les id des clients
+// on recupere tous les id des clients
         $ids = $this->repository->findIds();
-        // on place les ids trouves dans le tableal de parametres a envoyer a la vue
+// on place les ids trouves dans le tableal de parametres a envoyer a la vue
         $params ['lesId'] = $ids;
         $params ['ac'] = 'Commande';
-        // on teste si l'l'id du client a chercher a ete passe dans l'URL
+// on teste si l'l'id du client a chercher a ete passe dans l'URL
         if (array_key_exists('id', $params)) {
             $id = filter_var(intval($params ["id"]), FILTER_VALIDATE_INT);
             $unClient = $this->repository->find($id);
             if ($unClient) {
-                // le client a ete trouvé
+// le client a ete trouvé
                 $params ['unClient'] = $unClient;
             } else {
-                //le client a ete cherche mais pas trouve
+//le client a ete cherche mais pas trouve
                 $params ['message'] = "Client " . $id . " inconnu";
             }
         }
@@ -49,7 +49,7 @@ class GestionClientController {
     }
 
     public function chercheTous() {
-        // appel de la methode findAll() de la classe Model adequate
+// appel de la methode findAll() de la classe Model adequate
         $clients = $this->repository->findAll();
         if ($clients) {
             $r = new ReflectionClass($this);
@@ -67,7 +67,7 @@ class GestionClientController {
         } else {
             try {
                 $params = $this->verificationSaisieClient($params);
-                //Creation de l'objet client à partir des données du formulaire
+//Creation de l'objet client à partir des données du formulaire
                 $client = new Client($params);
                 $this->repository->insert($client);
                 $this->chercheTous();
@@ -110,11 +110,13 @@ class GestionClientController {
     }
 
     public function statsClients() {
-        // récupération d'un objet ClientRepository
+// récupération d'un objet ClientRepository
         $clients = $this->repository->statistiquesTousClients();
         $repositoryCommande = Repository::getRepository("App\Entity\Commande");
         $commandes = $repositoryCommande->findAll();
-        for ($i = 0; $i < count($clients); $i++) {
+        for ($i = 0;
+                $i < count($clients);
+                $i++) {
             $nbCommande = 0;
             foreach ($commandes as $commande) {
                 if ($commande->getIdClient() == $clients[$i]["id"]) {
@@ -148,8 +150,8 @@ class GestionClientController {
         $paramsVue['titres'] = $titres;
         $paramsVue['cps'] = $cps;
         $paramsVue['villes'] = $villes;
-        // Gestion du retour du formulaire
-        // On va d'abord filtrer et préparer le retour du formulaire avec la fonction verifieEtPrepareCriteres
+// Gestion du retour du formulaire
+// On va d'abord filtrer et préparer le retour du formulaire avec la fonction verifieEtPrepareCriteres
         $criteresPrepares = $this->verifieEtPrepareCriteres($params);
         if (count($criteresPrepares) > 0) {
             $clients = $this->repository->findBy($params);
@@ -181,7 +183,7 @@ class GestionClientController {
         );
         $retour = filter_var_array($params, $args, false);
         if (isset($retour['titreCli']) || isset($retour['cpCli']) || isset($retour['villeCli'])) {
-            // c'est le retour du formulaire de choix de filtre
+// c'est le retour du formulaire de choix de filtre
             $element = "Choisir ... ";
             while (in_array($element, $retour)) {
                 unset($retour[array_search($element, $retour)]);
@@ -201,8 +203,42 @@ class GestionClientController {
             $id = filter_var($params["id"], FILTER_VALIDATE_INT);
             $unObjet = $this->repository->find($id);
             $params ['unClient'] = $unObjet;
-            $vue = "blocks/singleClient.html.twig";
+            $vue = "blocks/singleClientModif.html.twig";
         }
         MyTwig::afficheVue($vue, $params);
+    }
+
+    public function modifierClient($params) {
+        $params["id"] = filter_var($params["id"], FILTER_VALIDATE_INT);
+        $client = new Client($params);
+        if (strlen($client->getAdresseRue2Cli()) == 0) {
+            $client->setAdresseRue2Cli("_null_");
+        }
+        $this->repository->modifieTable($client);
+        header("Location: ?c=GestionClient&a=chercheTous");
+    }
+
+    public function rechercheClientsAjax($params) {
+        if (empty($params['titreCli']) && empty($params['cpCli']) || empty($params['villeCli'])) {
+            $titres = $this->repository->findColumnDistinctValues('titreCli');
+            $cps = $this->repository->findColumnDistinctValues('cpCli');
+            $villes = $this->repository->findColumnDistinctValues('villecli');
+            $paramsVue['titres'] = $titres;
+            $paramsVue['cps'] = $cps;
+            $paramsVue['villes'] = $villes;
+            $vue = "GestionClientView\\filtreClientsAjax.html.twig";
+        } else {
+            // c'est le retour du formulaire de choix de filtre
+            $element = "Choisir ... ";
+            while (in_array($element, $params)) {
+                unset($params [array_search($element, $params)]);
+            }
+            if (count($params) > 0) {
+                $clients = $this->repository->findBy($params);
+                $paramsVue['clients'] = $clients;
+                $vue = "blocks/arrayClients.html.twig";
+            }
+        }
+        MyTwig::afficheVue($vue, $paramsVue);
     }
 }
