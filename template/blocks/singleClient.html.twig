@@ -1,0 +1,10 @@
+{% block retour %}
+    <h2>Informations du client numéro {{ idClient }}</h2>
+    <p>{{ unClient.getPrenomCli() }} {{ unClient.getNomCli() }}</p>
+    <p> {{ unClient.getAdresseRuelcli() }}</p>
+    {% if unClient.getAdresseRue2Cli() %}
+        <p> {{ unClient.getAdresseRue2Cli() }}</p>
+    {% endif %}
+    <p>{{ unClient.getCpCli() }} {{ unClient.getVillecli() }}</p>
+    <p>{{ unClient.getTelCli() }}</p>
+{% endblock %}
