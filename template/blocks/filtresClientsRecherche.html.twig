@@ -1,0 +1,10 @@
+{% block recherche %}
+{% import '/imports/elements.html.twig' as elements %}
+<h2>Recherche selon critères</h2>
+<div class="form-group">
+    {{ elements. list ("titreCli", titres, "titre", "titres") }}
+    {{ elements. list ("villeCli", villes, "ville", "villes") }}
+    {{ elements. list ("cpCli", cps, "cp", "cps") }}
+</div>
+{% endblock %}
+
