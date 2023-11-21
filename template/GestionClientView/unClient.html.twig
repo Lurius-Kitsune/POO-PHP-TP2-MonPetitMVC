@@ -3,10 +3,12 @@
     {% if unClient %}
         {% set idClient = unClient.getId() %}
     {% endif %}
-    <form action="?c=GestionClient&a=chercheUn" method="post">
-        {% include 'blocks/clientRecherche.html.twig' %}
-        <input type="submit" value="Voir" class="btn btn-default"/>
-    </form>
+    {% block recherche %}
+        <form action="?c=GestionClient&a=chercheUn" method="post">
+            {% include 'blocks/clientRecherche.html.twig' %}
+            <input type="submit" value="Voir" class="btn btn-default"/>
+        </form>
+    {% endblock %}
     {% if unClient %}
         {% include 'blocks/singleClient.html.twig' %}
     {% else %}
